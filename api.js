@@ -2,6 +2,7 @@ var request=require('request')
 
 const api="Df8sZMMA8Y";
 exports.getStats=function(user,callback){
+    var sets=[]
     request.get({
         uri: 'https://api.quizlet.com/2.0/users/' + user + '/sets?client_id='+api,
     },

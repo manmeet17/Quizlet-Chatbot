@@ -14,11 +14,9 @@ var connector=new builder.ChatConnector({
 
 server.post('/api/messages',connector.listen())
 
-var bot=new builder.UniversalBot(connector,function(session){
-    session.send("You said %s",session.message.text);
-});
+var bot=new builder.UniversalBot(connector);
 
-var username="manmeet17";
+var username;
 var index=0;
 
 (function(){
@@ -42,6 +40,7 @@ bot.dialog('/user', new builder.IntentDialog()
             }
         },
         function(session,results){
+            session.send(results.response);
             quiz.getStats(results.response);
             session.beginDialog('/subject');
         }])
