@@ -50,4 +50,40 @@ bot.dialog('/user', new builder.IntentDialog()
         session.endConversation;
 }));
 
-bot.dialog('/subject',)
+bot.dialog('/subject', [
+    function (session) {
+       setTimeout(function(){
+        builder.Prompts.text(session, "What study set would you like today?" + quiz.Sets);
+        }, 2000)
+    },
+    function (session, results) {
+        quiz.GetTerms(results.response);
+        session.send("Ok! I got your flashcards! Send 'ready' to begin. Send 'flip' for definition. Send 'next' for the next card. Send 'exit' when you are done")
+        session.beginDialog('/study')
+    }]
+);
+
+bot.dialog('/study', new builder.IntentDialog()
+.matches(/^ready/i, [
+    function (session) {
+        session.send(quiz.Terms[index])
+    }])
+.matches(/^flip/i, [
+    function (session) {
+        session.send(quiz.Def[index])
+    }]
+)
+.matches(/^next/i, [
+    function (session) {
+        if (++index == quiz.Terms.length)
+            session.send("You are all out of cards! Hope you had fun studying! :)")
+        else
+            session.send(quiz.Terms[index])
+    }])
+ .matches(/^exit/i, [
+    function (session) {
+        session.send("Hope you had fun studying. See ya later :)")
+    }]
+)
+
+);
